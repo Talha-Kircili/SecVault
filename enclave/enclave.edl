@@ -1,0 +1,37 @@
+enclave {
+  // define ECALLs
+  trusted {
+    public void ecall_authenticate(void);
+    public void ecall_check_breach(void);
+    public void ecall_remove_password(void);
+    public void ecall_change_masterkey(void);
+    public void ecall_create_masterkey(void);
+    public void ecall_recover_masterkey(void);
+    public void ecall_recover_masterkey(void);
+    public std::string ecall_sha(std::string data);
+    public std::string ecall_sha256(std::string data);
+    public std::string ecall_password_generator(int len);
+    public void ecall_add_password(std::string domain="");
+    public bool ecall_password_policy(std::string password);
+    public void ecall_change_password(std::string account="");
+    public std::string ecall_read_password(std::string account, bool output);
+  };
+
+  // define OCALLs
+  untrusted {
+    void ocall_art(void);
+    void ocall_sanitize(void);
+    void ocall_remove_all(void);
+    int ocall_storage_size(void);
+    std::string ocall_get_account(void);
+    std::string* ocall_all_accounts(void);
+    void ocall_cout_string(const char* str);
+    void ocall_clear_console(int num);
+    void ocall_logger(std::string data);
+    std::string ocall_toHex(unsigned char* data, int len);
+    void ocall_printColored(std::string text, std::string color);
+    void ocall_write_storage(std::string data, std::string filename="");
+    std::string ocall_read_storage(std::string domain, std::string filename);
+    std::string ocall_remove_line(std::string filename, std::string account);
+  };
+};
