@@ -1,0 +1,6 @@
+# lib: curl
+libcurl4-openssl-dev
+
+# lib: openssl
+libssl-dev 
+
