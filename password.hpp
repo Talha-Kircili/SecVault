@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include "main.hpp"
 #include "utils.hpp"
 #include "crypto.hpp"
 #include "storage.hpp"

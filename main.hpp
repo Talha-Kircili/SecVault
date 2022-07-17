@@ -7,4 +7,3 @@
 #include "login.hpp"
 #include <iostream>
 #include <fstream>
-/** func declarations **/

@@ -61,17 +61,15 @@ int aes256_cbc_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned c
     return plaintext_len;
 }
 
-tuple<string,string> hkdf(string secret) {
+tuple<string,string> hkdf() {
     unsigned char iv[EVP_MAX_IV_LENGTH];
     unsigned char key[EVP_MAX_KEY_LENGTH];
     const EVP_CIPHER *cipher = EVP_aes_256_cbc();
     int ivlen = EVP_CIPHER_iv_length(cipher);
     int iklen = EVP_CIPHER_key_length(cipher);
     int iter = 1337;
-    unsigned char salt[8] = {8};
-    unsigned char keyivpair[iklen + ivlen]; 
-    PKCS5_PBKDF2_HMAC((const char *)secret.c_str(), -1, salt, 0, iter, EVP_sha512(), iklen + ivlen, keyivpair);
-    memcpy(key, keyivpair, iklen);
-    memcpy(iv, keyivpair + iklen, ivlen);
+    unsigned char *salt = (unsigned char*)password_generator(8).c_str();
+    PKCS5_PBKDF2_HMAC((const char *)master_pwd.c_str(), -1, salt, 0, 1, EVP_sha512(), iklen, key);
+    PKCS5_PBKDF2_HMAC((const char *)master_pwd.c_str(), -1, salt, 8, iter, EVP_sha512(), ivlen, iv);
     return {toHex(iv, ivlen), toHex(key, iklen)};
 }

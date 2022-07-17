@@ -94,10 +94,10 @@ void add_password(string domain) {
     int ciphertext_len;
     unsigned char ciphertext[128];
     string result = username + ":" + password;
-    auto [ivv, keyy] = hkdf(password_generator(1337));
+    auto [ivv, keyy] = hkdf();
     unsigned char *plaintext = (unsigned char *)result.c_str();
-    unsigned char *key = (unsigned char *)"01234567890123456789012345678901";   // TODO: hol key von TEE ab
-    unsigned char *iv = (unsigned char *)ivv.c_str(); // from prng
+    unsigned char *key = (unsigned char *)keyy.c_str();
+    unsigned char *iv = (unsigned char *)ivv.c_str();
     ciphertext_len = aes256_cbc_encrypt(plaintext, strlen((char *)plaintext), key, iv, ciphertext);
     write_storage(domain + (const char*)iv + ":"  + toHex(ciphertext, ciphertext_len), "vault");
 }
@@ -125,8 +125,9 @@ string read_password(string account, bool output) {
     }
     unsigned char *ciphertext = (unsigned char *)newString.c_str();
     /** decrypt ciphertext **/
+    auto [ivv, keyy] = hkdf();
     unsigned char *iv = (unsigned char *)iv_str.c_str();
-    unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
+    unsigned char *key = (unsigned char *)keyy.c_str();
     decryptedtext_len = aes256_cbc_decrypt(ciphertext, len/2, key, iv, decryptedtext);
     decryptedtext[decryptedtext_len] = '\0';
     /** read username & password **/

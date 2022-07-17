@@ -4,6 +4,8 @@
 
 using namespace std;
 
+string master_pwd;
+
 void recover_masterkey() {
     /** read seeds **/
     string temp, hash, input_seed, seed[5];
@@ -51,6 +53,7 @@ void authenticate() {
             clear_console(attempt*3);
             logger("successfull login!");
             printColored("Access granted!\n", "green");
+            master_pwd = password;
             return ;
         }
         logger("Wrong password");
@@ -75,6 +78,7 @@ void create_masterkey() {
     cout << "Set Master-Key: ";
     cin >> key;
     } while (!password_policy(key));
+    master_pwd = key;
     write_storage((const char*)"master:" +sha256(key), "masterkey");
     printColored("\nThe following 5 strings are your recovery seeds.\n"
         "These will only become displayed once, make sure to write them down and store them at a safe place.\n"
@@ -87,7 +91,7 @@ void create_masterkey() {
         temp.str("");
         write_storage((const char*)"seed" + to_string(i+1) + (const char*)":" + sha256(seed), "masterkey");
     }
-    hkdf(key); // TODO: store key in TEE
+    hkdf();
     cout << endl;
 }
 
