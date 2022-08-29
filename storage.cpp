@@ -2,6 +2,7 @@
 
 using namespace std;
 
+
 int storage_size() {
     int count=0;
     string line;
